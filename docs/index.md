@@ -1,7 +1,4 @@
 # MAISTODOS
-
-[![CI](https://github.com/josecarlosvieirajr/maistodos/actions/workflows/ci.yml/badge.svg)](https://github.com/josecarlosvieirajr/maistodos/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/josecarlosvieirajr/maistodos/branch/main/graph/badge.svg?token=OVQQF4IQY2)](https://codecov.io/gh/josecarlosvieirajr/maistodos)
 ## Documentação da API de Cadastro de Cartões de Crédito
 
 Bem-vindo à documentação da API de Cadastro de Cartões de Crédito da MAISTODOS LTDA! Neste guia, você encontrará informações abrangentes sobre como utilizar e integrar-se com o sistema inovador de cadastros de cartões de crédito. Este sistema foi projetado para garantir a qualidade, segurança e padronização dos dados, proporcionando uma experiência eficiente e confiável tanto para os usuários quanto para os desenvolvedores.

@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . /app
 
 RUN pip install poetry
-RUN poetry install
+RUN poetry install --only doc
 
 EXPOSE 8000
 

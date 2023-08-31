@@ -1,5 +1,6 @@
 # MAISTODOS
 
+[![Documentation Status](https://readthedocs.org/projects/maistodos/badge/?version=latest)](https://maistodos.readthedocs.io/pt/latest/?badge=latest)
 [![CI](https://github.com/josecarlosvieirajr/maistodos/actions/workflows/ci.yml/badge.svg)](https://github.com/josecarlosvieirajr/maistodos/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/josecarlosvieirajr/maistodos/branch/main/graph/badge.svg?token=OVQQF4IQY2)](https://codecov.io/gh/josecarlosvieirajr/maistodos)
 ## Documentação da API de Cadastro de Cartões de Crédito
@@ -8,10 +9,7 @@ Bem-vindo à documentação da API de Cadastro de Cartões de Crédito da MAISTO
 
 Nossa API de cadastro de cartões de crédito foi concebida como uma solução simples e robusta construida em Python, pronta para lidar com o processo de registro de cartões, atendendo às demandas do mercado em constante evolução. 
 
-!!! info "Sobre este Guia"
-    Este guia foi criado pra facilitar a compreensão de todos sobre a aplicação, caso surja alguma duvida entrar em contato com o dev responsavel.
-    [:fontawesome-brands-github:]({{ git.my }})
-
+## **Acesse a Documentação completa aqui [readthedocs](https://maistodos.readthedocs.io/pt/latest/)**
 
 ## Diagrama - Fluxo dos dados na app
 
