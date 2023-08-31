@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlmodel import Field, SQLModel, create_engine
+from sqlmodel import Field, Session, SQLModel, create_engine
 
 from app.config import settings
 
@@ -25,3 +25,8 @@ class CreditCard(Base, CreditCardBase, table=True):
 
 connect_args = {"check_same_thread": False}
 engine = create_engine(settings.database_url, echo=True, connect_args=connect_args)
+
+
+def get_session():
+    with Session(engine) as session:
+        yield session

@@ -1,7 +1,5 @@
+from .auth import router as router_auth
 from .credit_card import router as router_credit_card
 from .health import router as router_health
 
-__all__ = [
-    "router_health",
-    "router_credit_card",
-]
+__all__ = ["router_health", "router_credit_card", "router_auth"]

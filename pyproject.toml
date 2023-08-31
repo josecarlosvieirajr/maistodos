@@ -14,6 +14,8 @@ fastapi = "^0.103.0"
 sqlmodel = "^0.0.8"
 httpx = "^0.24.1"
 python-creditcard = {git = "https://github.com/maistodos/python-creditcard.git", rev = "main"}
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-multipart = "^0.0.6"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
@@ -58,3 +60,4 @@ test =  "pytest -s -x -vv --cov=app --cov-report=term-missing tests"
 post_test = "coverage html"
 docs = "mkdocs serve"
 start = "uvicorn asgi:application --reload --host 0.0.0.0 --port 8001"
+part = "pytest -s -x -vv -k $1"

@@ -21,9 +21,10 @@ from app.db.model import Base
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
-class CRUDBase(Generic[ModelType, CreateSchemaType]):
+class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
         """
         CRUD object with default methods to Create, Read, Update, Delete (CRUD).
@@ -61,17 +62,19 @@ class CRUDBase(Generic[ModelType, CreateSchemaType]):
         self,
         session: Session,
         *,
-        obj_in: Union[CreateSchemaType, Dict[str, Any]],
+        id: int,
+        obj_in: Union[UpdateSchemaType, Dict[str, Any]],
     ) -> ModelType:
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
             update_data = jsonable_encoder(obj_in)
-        statement = select(self.model).where(self.model.id == update_data["uuid"])
+
+        statement = select(self.model).where(self.model.id == id)
         results = session.exec(statement)
 
         db_obj = results.one()
-        db_obj.dict().update(update_data)
+        db_obj.holder = update_data["holder"]
 
         session.add(db_obj)
         session.commit()
