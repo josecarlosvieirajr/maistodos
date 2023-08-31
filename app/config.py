@@ -1,5 +1,5 @@
 """
-Módulo de Configuração.
+## Módulo de Configuração.
 Esse módulo é responsável por definir as configurações do serviço.
 
 Attributes:

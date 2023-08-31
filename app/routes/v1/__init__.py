@@ -1,14 +1,15 @@
 """
-# Routes
+## Modulo de Rotas V1
 
 ## V1: API inicial
 
 Attributes:
-    api_router: Router da API v1.
+    api_router (method): Router da API v1.
 
 Args:
-    router_credit_card: Rota de cartão de crédito.
-    router_health: Rota de health check.
+    router_credit_card (method): Rota de cartão de crédito.
+    router_health (method): Rota de health check.
+    router_auth (method): Rota de autenticação.
 """
 from fastapi import APIRouter
 
