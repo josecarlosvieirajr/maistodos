@@ -17,7 +17,7 @@ jobs:
           poetry install --without doc
       - name: Run tests
         run: |
-          poetry run pytest
+          poetry run pytest --cov-report=xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
