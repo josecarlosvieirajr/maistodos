@@ -1,0 +1,21 @@
+site_name: Mais Todos
+repo_url: https://github.com/josecarlosvieirajr/testesvagas/tree/master/maistodos
+repo_name: josecarlosvieirajr/maistodos
+
+theme:
+  name: material
+  language: pt-BR
+
+plugins:
+- macros
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [api]
+
+extra:
+  rotas:
+    base_project: http://0.0.0.0:8001
+
+watch:
+  - api
