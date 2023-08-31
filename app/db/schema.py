@@ -6,6 +6,17 @@ from pydantic import BaseModel, Field, root_validator, validator
 from app.utils import datetime_validator, hashable
 
 
+class CreditCardSchemaUpdate(BaseModel):
+    holder: str
+
+    @validator("holder", pre=True, always=True)
+    @classmethod
+    def check_holder(cls, value: str) -> str:
+        if isinstance(value, str) and len(value) > 2:
+            return value
+        raise ValueError("Invalid holder, very short statement")
+
+
 class CreditCardSchema(BaseModel):
     holder: str
     number: str
