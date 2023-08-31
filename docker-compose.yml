@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: maistodos-application
+    build:
+      context: .
+      dockerfile: ./docker/app.dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./app:/app
+    environment:
+      - DATABASE_URL=/app/db.db 
+    networks: 
+      - maistodos
+
+  doc:
+    container_name: maistodos-docs
+    build:
+      context: .
+      dockerfile: ./docker/docs.dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./doc:/doc
+    networks: 
+      - maistodos
+
+  nginx:
+    container_name: maistodos-nginx
+    image: nginx
+    build:
+      dockerfile: ./docker/nginx.dockerfile
+      context: .
+    ports:
+      - "80:80"
+    networks: 
+      - maistodos
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - app
+      - doc
+
+networks:
+  maistodos:
+    name: maistodos
+    
