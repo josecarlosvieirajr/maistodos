@@ -1,21 +1,52 @@
 site_name: Mais Todos
-repo_url: https://github.com/josecarlosvieirajr/testesvagas/tree/master/maistodos
+repo_url: https://github.com/josecarlosvieirajr/maistodos
 repo_name: josecarlosvieirajr/maistodos
 
 theme:
   name: material
   language: pt-BR
+  features:
+  - navigation.footer
+  - content.code.copy
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 plugins:
 - macros
 - mkdocstrings:
     handlers:
       python:
-        paths: [api]
+        paths: [app]
 
 extra:
-  rotas:
+  routes:
     base_project: http://0.0.0.0:8001
+  git:
+    my: https://github.com/josecarlosvieirajr
+  social:
+    - icon: fontawesome/brands/github 
+      link: https://github.com/josecarlosvieirajr
+    - icon: fontawesome/brands/linkedin 
+      link: https://www.linkedin.com/in/jose-carlos-vieira-junior-4a5b5515b/
+    - icon: fontawesome/brands/twitter 
+      link: https://twitter.com/pyzejr
 
 watch:
-  - api
+  - app
