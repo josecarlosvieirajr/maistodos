@@ -1,5 +1,5 @@
 """
-## Initialize the FastAPI application.
+## Modulo Inical.
 Nesse modulo inicial é onde é criado o app FastAPI,
  e adicionado os middlewares e rotas.
 
@@ -24,7 +24,13 @@ logger = logging.getLogger(__name__)
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title=settings.service_name)
+    """
+    Cria o app FastAPI e adiciona os middlewares e rotas.
+
+    """
+    app = FastAPI(
+        title=settings.service_name, docs_url="/api/docs", redoc_url="/api/redoc"
+    )
 
     SQLModel.metadata.create_all(engine)
 
