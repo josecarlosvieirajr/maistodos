@@ -8,7 +8,7 @@ alem de ficar mais organizado e visivel, facilitando a manutenção.
 from datetime import datetime, timedelta
 
 from fastapi import Header, HTTPException, status
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from pydantic import BaseModel
 
 from app.config import settings
@@ -28,6 +28,13 @@ def raise_exception():
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"token": "Bearer"},
+    )
+
+
+def raise_expired_token():
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Token expired",
     )
 
 
@@ -92,6 +99,8 @@ def check_token(token: str = Header()):
         payload = jwt.decode(
             token, settings.secret_key, algorithms=[settings.algorithm]
         )
+    except ExpiredSignatureError:
+        raise_expired_token()
     except JWTError:
         raise_exception()
 
