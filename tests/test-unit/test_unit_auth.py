@@ -2,6 +2,7 @@ import pytest
 from fastapi import HTTPException
 
 from app.auth import check_token, create_access_token
+from tests.mocks.auth import generate_expire_token
 
 
 def test_create_access_token():
@@ -48,5 +49,10 @@ def test_check_token_with_data_but_username_empty():
 
 def test_check_token_with_data_but_username_not_string():
     token = create_access_token(data={"sub": 123})
+    with pytest.raises(HTTPException):
+        check_token(token=token)
+
+def test_check_token_with_expired_token():
+    token = generate_expire_token()
     with pytest.raises(HTTPException):
         check_token(token=token)
