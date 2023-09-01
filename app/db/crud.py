@@ -18,6 +18,7 @@ from pydantic import BaseModel
 from sqlmodel import Session, select
 
 from app.db.model import Base
+from app.exceptions.crud_error import CRUDUpdateError
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -129,7 +130,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         results = session.exec(statement)
         db_obj = results.one_or_none()
         if db_obj is None:
-            raise ValueError("Invalid ID provided")
+            raise CRUDUpdateError(obj_id=id)
 
         if isinstance(obj_in, dict):
             update_data = obj_in
