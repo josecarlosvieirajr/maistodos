@@ -27,7 +27,7 @@ valid_visa_credit_card_json = {
 }
 
 valid_master_credit_card_json = {
-    "holder": "Test User 2",
+    "holder": "Test User 1",
     "number": VALID_MASTER_CREDIT_CARD_NUMBER,
     "exp_date": "01/2029",
     "cvv": 123,
@@ -52,6 +52,13 @@ valid_master_credit_card_with_invalid_cvv_json = {
     "number": VALID_MASTER_CREDIT_CARD_NUMBER,
     "exp_date": "01/2029",
     "cvv": "abc",
+}
+
+valid_master_credit_card_with_cvv_to_4_digits_json = {
+    "holder": "Test User 2",
+    "number": VALID_MASTER_CREDIT_CARD_NUMBER,
+    "exp_date": "01/2029",
+    "cvv": 1234,
 }
 
 valid_master_credit_card_with_invalid_holder_json = {
