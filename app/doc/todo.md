@@ -11,3 +11,4 @@ _nesse passo deve-se usar `pytest.raises` ignorando o regex_
  with pytest.raises(CRUDUpdateError, match=re.escape(msg_error)):
 ```
 - [ ] escrever um bloco na documentacao sobre as classes de erros
+- [ ] rebuild da doc no readthedocs
