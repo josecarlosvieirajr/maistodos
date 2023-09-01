@@ -68,6 +68,11 @@ Para acessar o swagger onde é possivel você interajir com os endpoints e testa
 ```
 http://localhost:8000/api/docs
 ```
+ou
+
+```
+http://localhost:8000/api/redoc
+```
 
 ## Encerrando a Execução
 

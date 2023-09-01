@@ -59,11 +59,11 @@ def datetime_validator(value: str) -> str:
     today = datetime.now().date()
 
     parsed_date = datetime.strptime(value, input_format).date()
-
-    if parsed_date < today:
-        raise ValueError("The input date is not earlier than today.")
-
     last_day_of_month = (parsed_date.replace(day=1) + timedelta(days=32)).replace(
         day=1
     ) - timedelta(days=1)
+
+    if last_day_of_month < today:
+        raise ValueError("The input date is not earlier than today.")
+
     return last_day_of_month.strftime(output_format)
