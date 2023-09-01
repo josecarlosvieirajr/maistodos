@@ -55,9 +55,11 @@ class CreditCardSchemaUpdate(BaseModel):
         Raises:
             ValueError: Se o nome do titular for muito curto.
         """
-        if isinstance(value, str) and len(value) > 2:
+        if isinstance(value, str) and 2 < len(value) < 100:
             return value
-        raise ValueError("Invalid holder, very short statement")
+        raise ValueError(
+            "Holder name must be more than 2 characters and less than 100 characters"
+        )
 
 
 class CreditCardSchema(BaseModel):

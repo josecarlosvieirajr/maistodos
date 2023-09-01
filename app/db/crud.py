@@ -66,7 +66,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         statement = select(self.model).where(self.model.id == id)
         resp = session.exec(statement)
-        return resp.one()
+
+        return resp.one_or_none()
 
     def get_multi(
         self, session: Session, *, skip: int = 0, limit: int = 100
@@ -124,15 +125,17 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             value (ModelType): A instância do modelo atualizada.
         """
+        statement = select(self.model).where(self.model.id == id)
+        results = session.exec(statement)
+        db_obj = results.one_or_none()
+        if db_obj is None:
+            raise ValueError("Invalid ID provided")
+
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
             update_data = jsonable_encoder(obj_in)
 
-        statement = select(self.model).where(self.model.id == id)
-        results = session.exec(statement)
-
-        db_obj = results.one()
         db_obj.holder = update_data["holder"]
 
         session.add(db_obj)
@@ -153,7 +156,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """
         statement = select(self.model).where(self.model.id == id)
         results = session.exec(statement)
-        db_obj = results.one()
+        db_obj = results.one_or_none()
+
+        if db_obj is None:
+            raise ValueError("ID does not exist")
 
         session.delete(db_obj)
         session.commit()
