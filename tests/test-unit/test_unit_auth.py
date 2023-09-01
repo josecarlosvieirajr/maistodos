@@ -52,6 +52,7 @@ def test_check_token_with_data_but_username_not_string():
     with pytest.raises(HTTPException):
         check_token(token=token)
 
+
 def test_check_token_with_expired_token():
     token = generate_expire_token()
     with pytest.raises(HTTPException):

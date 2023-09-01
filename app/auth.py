@@ -30,6 +30,7 @@ def raise_exception():
         headers={"token": "Bearer"},
     )
 
+
 def raise_expired_token():
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -104,7 +105,6 @@ def check_token(token: str = Header()):
         raise_exception()
 
     username = payload.get("sub", None)
-    breakpoint()
     if username is None or {}:
         raise_exception()
 

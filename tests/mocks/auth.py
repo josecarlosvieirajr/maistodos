@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
-from app.config import settings
+
 from jose import jwt
 
+from app.config import settings
 
 INVALID_TOKEN = (
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZ"
@@ -9,8 +10,8 @@ INVALID_TOKEN = (
     "k6yJV_adQssw5c"
 )
 
+
 def generate_expire_token():
-    
     expired = datetime.utcnow() + timedelta(minutes=-15)
     to_encode = {"sub": "testuser", "exp": expired}
     encoded_jwt = jwt.encode(
