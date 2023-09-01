@@ -96,7 +96,7 @@ def check_token(token: str = Header()):
         raise_exception()
 
     username = payload.get("sub", None)
-    if username is None:
+    if username is None or {}:
         raise_exception()
 
     return username
