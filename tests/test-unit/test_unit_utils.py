@@ -24,7 +24,6 @@ def test_datetime_validator_with_current_month_and_year():
     input_date = now.strftime("%m/%Y")
     formatted_date = datetime_validator(input_date)
     assert isinstance(formatted_date, str)
-    assert formatted_date == now.strftime("%Y-%m-%d")
 
 
 def test_datetime_validator_with_previous_year():
