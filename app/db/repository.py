@@ -4,6 +4,10 @@ Módulo que define ações relacionadas aos Verbos HTTP para manipulação de ca
 Cria um especificação do modulo generico de CRUD.
 """
 
+from typing import Any, Dict
+
+from sqlmodel import Session
+
 from app.db.crud import CRUDBase
 from app.db.model import CreditCard
 from app.db.schema import CreditCardSchema, CreditCardSchemaUpdate
@@ -24,7 +28,15 @@ class CartRepository(CRUDBase[CreditCard, CreditCardSchema, CreditCardSchemaUpda
     * `remove(session: Session, *, id: int) -> CreditCard`: Remove um cartão de crédito pelo ID.
     """
 
-    pass
+    def update(
+        self,
+        session: Session,
+        *,
+        id: int,
+        obj_in: CreditCardSchemaUpdate | Dict[str, Any]
+    ) -> CreditCard:
+        db_obj = self.convert_any_to_dict(obj_in)
+        return super().update(session, id=id, obj_in={"holder": db_obj["holder"]})
 
 
 credit_card_repository = CartRepository(CreditCard)

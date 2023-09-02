@@ -54,6 +54,20 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
+    def _commit_and_refresh(self, session: Session, db_obj: ModelType) -> ModelType:
+        session.commit()
+        session.refresh(db_obj)
+        return db_obj
+
+    def convert_any_to_dict(
+        self, obj_in: Union[UpdateSchemaType, Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        if isinstance(obj_in, dict):
+            update_data = obj_in
+        else:
+            update_data = jsonable_encoder(obj_in)
+        return update_data
+
     def get(self, session: Session, id: int) -> Optional[ModelType]:
         """
         Retorna uma instância do modelo com o ID correspondente.
@@ -65,10 +79,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             value (Optional[ModelType]): A instância do modelo, se encontrada; caso contrário, None.
         """
-        statement = select(self.model).where(self.model.id == id)
-        resp = session.exec(statement)
-
-        return resp.one_or_none()
+        return session.get(self.model, id)
 
     def get_multi(
         self, session: Session, *, skip: int = 0, limit: int = 100
@@ -85,8 +96,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             value (List[ModelType]): Uma lista de instâncias do modelo.
         """
         statement = select(self.model).offset(skip).limit(limit)
-        resp = session.exec(statement)
-        return resp.all()
+        results = session.exec(statement)
+        return results.all()
 
     def create(self, session: Session, *, obj_in: CreateSchemaType) -> ModelType:
         """
@@ -99,14 +110,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             value (ModelType): A instância do modelo recém-criada.
         """
-        obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)  # type: ignore
+        db_obj = self.model.parse_obj(obj_in)
         session.add(db_obj)
-
-        session.commit()
-        session.refresh(db_obj)
-
-        return db_obj
+        return self._commit_and_refresh(session, db_obj)
 
     def update(
         self,
@@ -126,23 +132,18 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             value (ModelType): A instância do modelo atualizada.
         """
-        statement = select(self.model).where(self.model.id == id)
-        results = session.exec(statement)
-        db_obj = results.one_or_none()
-        if db_obj is None:
+        result = session.get(self.model, id)
+
+        if not result:
             raise CRUDUpdateError(obj_id=id)
 
-        if isinstance(obj_in, dict):
-            update_data = obj_in
-        else:
-            update_data = jsonable_encoder(obj_in)
+        result_data = self.convert_any_to_dict(obj_in)
 
-        db_obj.holder = update_data["holder"]
+        for key, value in result_data.items():
+            setattr(result, key, value)
 
-        session.add(db_obj)
-        session.commit()
-        session.refresh(db_obj)
-        return db_obj
+        session.add(result)
+        return self._commit_and_refresh(session, result)
 
     def remove(self, session: Session, *, id: int) -> ModelType:
         """
@@ -155,13 +156,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             value (ModelType): A instância do modelo removida.
         """
-        statement = select(self.model).where(self.model.id == id)
-        results = session.exec(statement)
-        db_obj = results.one_or_none()
+        result = session.get(self.model, id)
 
-        if db_obj is None:
+        if not result:
             raise ValueError("ID does not exist")
 
-        session.delete(db_obj)
+        session.delete(result)
         session.commit()
-        return db_obj
+        return result
