@@ -17,6 +17,7 @@ Attributes:
 
 """
 import os
+from functools import lru_cache
 
 from dotenv import load_dotenv
 from pydantic import BaseSettings
@@ -24,7 +25,7 @@ from pydantic import BaseSettings
 load_dotenv()
 
 
-class Settings(BaseSettings):
+class APISettings(BaseSettings):
     """
     As variaveis de ambiente são definidas no arquivo .env na raiz do projeto.
 
@@ -42,5 +43,21 @@ class Settings(BaseSettings):
     algorithm: str = os.environ.get("ALGORITHM", "HS256")
     token_expire: int = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
+    class Config:
+        validate_assignment = True
 
-settings = Settings()
+
+@lru_cache()
+def get_api_settings() -> APISettings:
+    """
+    This function returns a cached instance of the APISettings object.
+
+    Caching is used to prevent re-reading the environment every time the API settings are used in an endpoint.
+
+    If you want to change an environment variable and reset the cache (e.g., during testing), this can be done
+    using the `lru_cache` instance method `get_api_settings.cache_clear()`.
+    """
+    return APISettings()
+
+
+settings = get_api_settings()
