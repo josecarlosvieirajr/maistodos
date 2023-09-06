@@ -15,10 +15,16 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from app.db.model import Base
-from app.exceptions.crud_error import CRUDUpdateError
+from app.exceptions.crud_error import (
+    CRUDCreateError,
+    CRUDDeleteError,
+    CRUDSelectError,
+    CRUDUpdateError,
+)
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -36,6 +42,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     * `model`: Uma classe modelo SQLModel.
     * `schema`: Uma classe modelo Pydantic (schema).
+    * `username`: O nome de usuário do usuário que está realizando a operação.
 
     **Atributos**
 
@@ -51,10 +58,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     * `remove(session: Session, *, id: int) -> ModelType`: Remove uma instância do modelo com o ID correspondente.
     """
 
+    username: Optional[str] = None
+
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
     def _commit_and_refresh(self, session: Session, db_obj: ModelType) -> ModelType:
+        """Realiza o commit e o refresh da sessão do banco de dados."""
         session.commit()
         session.refresh(db_obj)
         return db_obj
@@ -62,6 +72,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def convert_any_to_dict(
         self, obj_in: Union[UpdateSchemaType, Dict[str, Any]]
     ) -> Dict[str, Any]:
+        """Converte qualquer objeto do tipo UpdateSchemaType em um dicionário."""
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
@@ -79,7 +90,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         Returns:
             value (Optional[ModelType]): A instância do modelo, se encontrada; caso contrário, None.
         """
-        return session.get(self.model, id)
+        resp = session.get(self.model, id)
+
+        if not resp:
+            raise CRUDSelectError(self.username, obj_id=id)
+        return resp
 
     def get_multi(
         self, session: Session, *, skip: int = 0, limit: int = 100
@@ -111,8 +126,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             value (ModelType): A instância do modelo recém-criada.
         """
         db_obj = self.model.parse_obj(obj_in)
-        session.add(db_obj)
-        return self._commit_and_refresh(session, db_obj)
+        try:
+            session.add(db_obj)
+            return self._commit_and_refresh(session, db_obj)
+        except IntegrityError as e:
+            raise CRUDCreateError(self.username, obj_error=e)
 
     def update(
         self,
@@ -135,7 +153,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         result = session.get(self.model, id)
 
         if not result:
-            raise CRUDUpdateError(obj_id=id)
+            raise CRUDUpdateError(self.username, obj_id=id)
 
         result_data = self.convert_any_to_dict(obj_in)
 
@@ -159,7 +177,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         result = session.get(self.model, id)
 
         if not result:
-            raise ValueError("ID does not exist")
+            raise CRUDDeleteError(self.username, obj_id=id)
 
         session.delete(result)
         session.commit()
