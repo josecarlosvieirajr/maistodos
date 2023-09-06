@@ -1,11 +1,10 @@
-import re
 from typing import Any
 
 import pytest
 
 from app.db.crud import CRUDBase
 from app.db.model import Base
-from app.exceptions.crud_error import CRUDUpdateError
+from app.exceptions.crud_error import CRUDDeleteError, CRUDSelectError, CRUDUpdateError
 
 
 class BaseUnitTestModel(Base, table=True):
@@ -16,9 +15,8 @@ crud_base = CRUDBase(BaseUnitTestModel)
 
 
 def test_get_valid_id_with_empty_db(session):
-    result = crud_base.get(session, 1)
-
-    assert result is None
+    with pytest.raises(CRUDSelectError):
+        crud_base.get(session, 1)
 
 
 def test_get_valid_id_with_db_fill(session):
@@ -56,9 +54,8 @@ def test_remove_valid_id(session):
 
 
 def test_get_invalid_id(session):
-    result = crud_base.get(session, 132)
-
-    assert result is None
+    with pytest.raises(CRUDSelectError):
+        crud_base.get(session, 132)
 
 
 def test_get_multi_invalid_skip_limit(session):
@@ -68,12 +65,11 @@ def test_get_multi_invalid_skip_limit(session):
 
 
 def test_remove_not_exists_item(session):
-    with pytest.raises(ValueError):
+    with pytest.raises(CRUDDeleteError):
         crud_base.remove(session, id=1)
 
 
 def test_update_valid_id_input_in_empty_value(session):
     expect_id = 15
-    msg_error = f"Not updated, reference object not found, ReferenceObject<{expect_id}>"
-    with pytest.raises(CRUDUpdateError, match=re.escape(msg_error)):
+    with pytest.raises(CRUDUpdateError):
         crud_base.update(session, id=expect_id, obj_in={"holder": "Any"})

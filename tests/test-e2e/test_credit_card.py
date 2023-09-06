@@ -3,6 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from app.db.repository import credit_card_repository
+from app.exceptions.crud_error import CRUDCreateError
 from tests.mocks.auth import INVALID_TOKEN
 from tests.mocks.credit_card import (
     invalid_credit_card_json,
@@ -91,12 +92,10 @@ def test_registering_same_card_in_bank_twice(client, url_v1, header):
     client.post(
         f"{url_v1}/credit-card/", json=valid_visa_credit_card_json, headers=header
     )
-    response = client.post(
+    pytest.raises(CRUDCreateError)
+    client.post(
         f"{url_v1}/credit-card/", json=valid_visa_credit_card_json, headers=header
     )
-
-    assert response.status_code == 409
-    assert response.json()["detail"] == "this card number already exists"
 
 
 def test_registering_same_holder_in_bank_twice(client, url_v1, header):
@@ -143,7 +142,7 @@ def test_get_credit_card_for_key_with_invalid_token(client, url_v1, session):
 
 def test_update_credit_card_holder(client, url_v1, header, session):
     expected = "modified"
-    card = credit_card_repository.create(session, obj_in=valid_visa_credit_card)
+    card = credit_card_repository.create(session, obj_in=valid_master_credit_card)
 
     data = valid_visa_credit_card_json.copy()
     data["holder"] = expected

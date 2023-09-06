@@ -28,6 +28,10 @@ class CartRepository(CRUDBase[CreditCard, CreditCardSchema, CreditCardSchemaUpda
     * `remove(session: Session, *, id: int) -> CreditCard`: Remove um cartão de crédito pelo ID.
     """
 
+    def set_username(self, username: str):
+        """Define o nome de usuário do usuário que está realizando a operação."""
+        self.username = username
+
     def update(
         self,
         session: Session,
@@ -35,6 +39,11 @@ class CartRepository(CRUDBase[CreditCard, CreditCardSchema, CreditCardSchemaUpda
         id: int,
         obj_in: CreditCardSchemaUpdate | Dict[str, Any]
     ) -> CreditCard:
+        """
+        Devido a sensibilidade do dado,
+        não é permitido atualizar o número do cartão de crédito,
+        por isso, a atualização pode ser feita apenas no nome do titular.
+        """
         db_obj = self.convert_any_to_dict(obj_in)
         return super().update(session, id=id, obj_in={"holder": db_obj["holder"]})
 
