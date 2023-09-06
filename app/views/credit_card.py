@@ -18,7 +18,8 @@ from sqlmodel import Session
 from app.auth import check_token
 from app.db.model import CreditCard, get_session
 from app.db.repository import credit_card_repository
-from app.db.schema import CreditCardSchema, CreditCardSchemaUpdate, HTTPError
+from app.db.schema import CreditCardSchema, CreditCardSchemaUpdate
+from app.exceptions.http_error_schema import HTTPError
 
 router = APIRouter()
 
