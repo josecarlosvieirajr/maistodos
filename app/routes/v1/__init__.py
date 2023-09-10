@@ -11,9 +11,13 @@ Args:
     router_health (method): Rota de health check.
     router_auth (method): Rota de autenticação.
 """
+import logging
+
 from fastapi import APIRouter
 
 from app.views import router_auth, router_credit_card, router_health
+
+logger = logging.getLogger(__name__)
 
 api_router = APIRouter()
 

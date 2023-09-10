@@ -16,6 +16,7 @@ Attributes:
     token_expire: Define o tempo de expiração do token, por padrão é 30 minutos.
 
 """
+import logging
 import os
 from functools import lru_cache
 
@@ -23,6 +24,9 @@ from dotenv import load_dotenv
 from pydantic import BaseSettings
 
 load_dotenv()
+
+
+logger = logging.getLogger(__name__)
 
 
 class APISettings(BaseSettings):

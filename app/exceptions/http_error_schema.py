@@ -1,7 +1,11 @@
 """
 ## Modulo de Serialização de Erros HTTP
 """
+import logging
+
 from pydantic import BaseModel
+
+logger = logging.getLogger(__name__)
 
 
 class HTTPError(BaseModel):

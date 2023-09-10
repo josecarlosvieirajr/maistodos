@@ -5,6 +5,7 @@ Esse modulo foi construido em separa, para facilitar a reutilização
  em outras partes do projetos,
 alem de ficar mais organizado e visivel, facilitando a manutenção.
 """
+import logging
 from datetime import datetime, timedelta
 
 from fastapi import Header, HTTPException, status
@@ -12,6 +13,8 @@ from jose import ExpiredSignatureError, JWTError, jwt
 from pydantic import BaseModel
 
 from app.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class Token(BaseModel):

@@ -4,11 +4,14 @@
 """
 
 from datetime import datetime
+import logging
 from typing import Optional
 
 from sqlmodel import Field, Session, SQLModel, create_engine
 
 from app.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class Base(SQLModel):
