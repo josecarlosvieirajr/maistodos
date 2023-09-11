@@ -7,7 +7,10 @@ Functions:
     datetime_validator: Valida e formata uma data no formato mês/ano.
 """
 import hashlib
+import logging
 from datetime import datetime, timedelta
+
+logger = logging.getLogger(__name__)
 
 
 def hashable(value):

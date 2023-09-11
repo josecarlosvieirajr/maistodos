@@ -3,7 +3,11 @@
 Módulo que define exceções personalizadas para erros de operações CRUD.
 """
 
+import logging
+
 from fastapi import HTTPException
+
+logger = logging.getLogger(__name__)
 
 
 class CRUDUpdateError(HTTPException):

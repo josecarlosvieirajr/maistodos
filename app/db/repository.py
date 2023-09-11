@@ -4,6 +4,7 @@ Módulo que define ações relacionadas aos Verbos HTTP para manipulação de ca
 Cria um especificação do modulo generico de CRUD.
 """
 
+import logging
 from typing import Any, Dict
 
 from sqlmodel import Session
@@ -11,6 +12,8 @@ from sqlmodel import Session
 from app.db.crud import CRUDBase
 from app.db.model import CreditCard
 from app.db.schema import CreditCardSchema, CreditCardSchemaUpdate
+
+logger = logging.getLogger(__name__)
 
 
 class CartRepository(CRUDBase[CreditCard, CreditCardSchema, CreditCardSchemaUpdate]):

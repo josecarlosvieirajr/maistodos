@@ -1,12 +1,15 @@
 """
 ## Modulo de Schemas, a camada de serialização e validação de dados.
 """
+import logging
 from typing import Annotated, Optional
 
 from creditcard import CreditCard
 from pydantic import BaseModel, Field, root_validator, validator
 
 from app.utils import datetime_validator, hashable
+
+logger = logging.getLogger(__name__)
 
 
 class CreditCardSchemaUpdate(BaseModel):
