@@ -3,8 +3,8 @@
 
 """
 
-from datetime import datetime
 import logging
+from datetime import datetime
 from typing import Optional
 
 from sqlmodel import Field, Session, SQLModel, create_engine
